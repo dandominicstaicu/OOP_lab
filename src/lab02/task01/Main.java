@@ -52,7 +52,7 @@ class Complex {
         } else if (this.imaginary == 0) {
             System.out.println(this.real);
         } else {
-            System.out.println(this.real + " - i * " + this.imaginary);
+            System.out.println(this.real + " - i * " + -this.imaginary);
         }
     }
 }
