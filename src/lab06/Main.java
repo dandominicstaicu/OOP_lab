@@ -11,9 +11,9 @@ class Car {
         SKODA
     }
 
-    private int price;
-    private CarType type;
-    private int year;
+    private final int price;
+    private final CarType type;
+    private final int year;
 
     public Car(int price, CarType type, int year) {
         this.price = price;
@@ -44,42 +44,34 @@ interface Offer {
 }
 
 class Dealership {
-    private class BrandOffer implements Offer {
+    private static class BrandOffer implements Offer {
         @Override
         public int getDiscount(Car car) {
-            switch (car.getType()) {
-                case MERCEDES:
-                    return (int) (car.getPrice() * 0.05);
-                case FIAT:
-                    return (int) (car.getPrice() * 0.1);
-                case SKODA:
-                    return (int) (car.getPrice() * 0.15);
-                default:
-                    return 0;
-            }
+            return switch (car.getType()) {
+                case MERCEDES -> (int) (car.getPrice() * 0.05);
+                case FIAT -> (int) (car.getPrice() * 0.1);
+                case SKODA -> (int) (car.getPrice() * 0.15);
+                default -> 0;
+            };
         }
     }
 
-    private class DealerOffer implements Offer {
+    private static class DealerOffer implements Offer {
         @Override
         public int getDiscount(Car car) {
             int currentYear = 2022;
             int age = currentYear - car.getYear();
 
-            switch (car.getType()) {
-                case MERCEDES:
-                    return age * 300;
-                case FIAT:
-                    return age * 100;
-                case SKODA:
-                    return age * 150;
-                default:
-                    return 0;
-            }
+            return switch (car.getType()) {
+                case MERCEDES -> age * 300;
+                case FIAT -> age * 100;
+                case SKODA -> age * 150;
+                default -> 0;
+            };
         }
     }
 
-    private class SpecialOffer implements Offer {
+    private static class SpecialOffer implements Offer {
         @Override
         public int getDiscount(Car car) {
             return Main.rand.nextInt(1000);
@@ -165,11 +157,11 @@ public class Main {
                 cars_list.add(new Car(50000, Car.CarType.MERCEDES, 2021));
                 cars_list.add(new Car(10000, Car.CarType.FIAT, 2018));
 
-                cars_list.forEach(car -> System.out.println(car));
+                cars_list.forEach(System.out::println);
 
                 cars_list.removeIf(car -> car.getPrice() > 25000);
 
-                cars_list.forEach(car -> System.out.println(car));
+                cars_list.forEach(System.out::println);
 
                 break;
         }
