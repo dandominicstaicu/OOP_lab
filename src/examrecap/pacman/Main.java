@@ -252,10 +252,6 @@ public class Main {
             int redX = scan.nextInt();
             int redY = scan.nextInt();
 
-//            if (redX == 1) {
-//                redX = 0;
-//            }
-
             redPhantoms.add(new RedPhantom(redX, redY));
         }
 
@@ -263,10 +259,6 @@ public class Main {
         for (int i = 0; i < bCount; ++i) {
             int blueX = scan.nextInt();
             int blueY = scan.nextInt();
-
-//            if (blueY == 1) {
-//                blueY = 0;
-//            }
 
             bluePhantoms.add(new BluePhantom(blueX, blueY));
         }

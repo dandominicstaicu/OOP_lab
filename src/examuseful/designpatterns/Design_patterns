@@ -1,0 +1,407 @@
+Factory pattern
+
+
+public interface Foo {
+    public void bar();
+}
+public interface FooFactory {
+    public Foo createFoo();
+}
+public class SpecializedFoo implements Foo {
+    ...
+}
+public class SpecializedFooFactory implements FooFactory {
+    public Foo createFoo() {
+        return new SpecializedFoo();
+    }
+}
+
+Factory Method Pattern
+
+
+    abstract class Pizza {
+        public abstract double getPrice();
+    }
+    class HamAndMushroomPizza extends Pizza {
+        public double getPrice() {
+            return 8.5;
+        }
+    }
+    class DeluxePizza extends Pizza {
+        public double getPrice() {
+            return 10.5;
+        }
+    }
+    class HawaiianPizza extends Pizza {
+        public double getPrice() {
+            return 11.5;
+        }
+    }
+
+    class PizzaFactory {
+        public enum PizzaType {
+            HamMushroom, Deluxe, Hawaiian
+        }
+        public static Pizza createPizza(PizzaType pizzaType) {
+            switch (pizzaType) {
+                case HamMushroom: return new HamAndMushroomPizza();
+                case Deluxe:      return new DeluxePizza();
+                case Hawaiian:    return new HawaiianPizza();
+            }
+            throw new IllegalArgumentException("The pizza type " + pizzaType + " is not recognized.");
+        }
+    }
+    public class PizzaLover {
+        public static void main (String args[]) {
+            for (PizzaFactory.PizzaType pizzaType : PizzaFactory.PizzaType.values()) {
+                System.out.println("Price of " + pizzaType + " is " + PizzaFactory.createPizza(pizzaType).getPrice());
+            }
+        }
+    }
+
+
+Observer Pattern
+
+Step 1: Define the Observer interface
+
+public interface Observer {
+    void update(int state);
+}
+
+Step 2: Define the Subject class
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Subject {
+    private List<Observer> observers = new ArrayList<>();
+    private int state;
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+        notifyAllObservers();
+    }
+
+    public void attach(Observer observer) {
+        observers.add(observer);
+    }
+
+    private void notifyAllObservers() {
+        for (Observer observer : observers) {
+            observer.update(state);
+        }
+    }
+}
+
+
+Step 3: Create Concrete Observers
+public class ConcreteObserverA implements Observer {
+    @Override
+    public void update(int state) {
+        System.out.println("ConcreteObserverA: observed state change to " + state);
+    }
+}
+
+public class ConcreteObserverB implements Observer {
+    @Override
+    public void update(int state) {
+        System.out.println("ConcreteObserverB: observed state change to " + state);
+    }
+}
+
+Step 4: Demonstrate the Observer pattern
+
+public class ObserverPatternDemo {
+    public static void main(String[] args) {
+        Subject subject = new Subject();
+
+        ConcreteObserverA observerA = new ConcreteObserverA();
+        ConcreteObserverB observerB = new ConcreteObserverB();
+
+        subject.attach(observerA);
+        subject.attach(observerB);
+
+        System.out.println("First state change: 15");
+        subject.setState(15);
+        System.out.println("Second state change: 10");
+        subject.setState(10);
+    }
+}
+
+
+
+COMMAND PATTERN
+
+public class Image {
+   private int blurStrength;
+   private int length;
+   private int width;
+
+   public Image(int length, int width) {
+       this.length = length;
+       this.width = width;
+   }
+
+   public int getBlurStrength() {
+       return blurStrength;
+   }
+
+   public void setBlurStrength(int blurStrength) {
+       this.blurStrength = blurStrength;
+   }
+
+   public int getLength() {
+       return length;
+   }
+
+   public void setLength(int length) {
+       this.length = length;
+   }
+
+   public int getWidth() {
+       return width;
+   }
+
+   public void setWidth(int width) {
+       this.width = width;
+   }
+}
+
+
+interface Command {
+   void execute();
+
+   void undo();
+}
+
+
+// Concrete command
+
+public class BlurCommand implements Command {
+   private final Image image;
+   private int previousBlurStrength;
+   private int nextBlurStrength;
+
+   public BlurCommand(Image image, int blurStrength) {
+       this.image = image;
+       this.nextBlurStrength = blurStrength;
+   }
+
+   @Override
+   public void execute() {
+       previousBlurStrength = image.getBlurStrength();
+       image.setBlurStrength(nextBlurStrength);
+   }
+
+   @Override
+   public void undo() {
+       nextBlurStrength = previousBlurStrength;
+       previousBlurStrength = image.getBlurStrength();
+       image.setBlurStrength(nextBlurStrength);
+   }
+}
+
+public class ResizeCommand implements Command {
+   private final Image image;
+   private int previousWidth;
+   private int previousLength;
+   private int nextWidth;
+   private int nextLength;
+
+   public ResizeCommand(Image image, int width, int length) {
+       this.image = image;
+       nextWidth = width;
+       nextLength = length;
+   }
+
+   @Override
+   public void execute() {
+       previousWidth = image.getWidth();
+       image.setWidth(nextWidth);
+
+       previousLength = image.getLength();
+       image.setLength(nextLength);
+   }
+
+   @Override
+   public void undo() {
+       nextWidth = previousWidth;
+       previousWidth = image.getWidth();
+       image.setWidth(nextWidth);
+
+       nextLength = previousLength;
+       previousLength = image.getLength();
+       image.setLength(nextLength);
+   }
+}
+
+
+
+// Invoker
+
+public class Editor {
+   // LinkedList este folosit ca stivă în Java
+   private LinkedList<Command> history = new LinkedList<>(); // păstrează comenzile aplicate pe imagine
+
+   public void edit(Command command) {
+       history.push(command);
+       command.execute();
+   }
+
+   public void undo() {
+       if (history.isEmpty()) return;
+
+       Command command = history.pop();
+       if (command != null) {
+           command.undo();
+       }
+   }
+}
+
+
+BUILDER PATTERN
+    public class Pizza {
+        private String pizzaSize;
+        private int cheeseCount;
+        private int pepperoniCount;
+        private int hamCount;
+
+        // constructor, getters, setters
+    }
+
+    public class Pizza {
+        private String pizzaSize; // mandatory
+        private int cheeseCount; // optional
+        private int pepperoniCount; // optional
+        private int hamCount; // optional
+
+        public Pizza(String pizzaSize) {
+            this(pizzaSize, 0, 0, 0);
+        }
+
+        public Pizza(String pizzaSize, int cheeseCount) {
+            this(pizzaSize, cheeseCount, 0, 0);
+        }
+
+        public Pizza(String pizzaSize, int cheeseCount, int pepperoniCount) {
+            this(pizzaSize, cheeseCount, pepperoniCount, 0);
+        }
+
+        public Pizza(String pizzaSize, int cheeseCount, int pepperoniCount, int hamCount) {
+            this.pizzaSize = pizzaSize;
+            this.cheeseCount = cheeseCount;
+            this.pepperoniCount = pepperoniCount;
+            this.hamCount = hamCount;
+        }
+
+        // getters
+    }
+
+    public class Pizza {
+        private String pizzaSize; // mandatory
+        private String crust; // mandatory
+        private int cheeseCount; // optional
+        private int pepperoniCount; // optional
+        private int hamCount; // optional
+        private int mushroomsCount; // optional
+
+        public Pizza(String pizzaSize, String crust) {
+            this(pizzaSize, crust, 0, 0, 0, 0);
+        }
+
+        public Pizza(String pizzaSize, String crust, int cheeseCount) {
+            this(pizzaSize, crust, cheeseCount, 0, 0, 0);
+        }
+
+        public Pizza(String pizzaSize, String crust, int cheeseCount, int pepperoniCount) {
+            this(pizzaSize, crust, cheeseCount, pepperoniCount, 0, 0);
+        }
+
+        public Pizza(String pizzaSize, String crust, int cheeseCount, int pepperoniCount, int hamCount) {
+            this(pizzaSize, crust, cheeseCount, pepperoniCount, hamCount, 0);
+        }
+
+        public Pizza(String pizzaSize, String crust, int cheeseCount, int pepperoniCount, int hamCount, int mushroomsCount) {
+            this.pizzaSize = pizzaSize;
+            this.crust = crust;
+            this.cheeseCount = cheeseCount;
+            this.pepperoniCount = pepperoniCount;
+            this.hamCount = hamCount;
+            this.mushroomsCount = mushroomsCount;
+        }
+
+        // getters
+    }
+
+    public class Pizza {
+        private String pizzaSize;
+        private String crust;
+        private int cheeseCount;
+        private int pepperoniCount;
+        private int hamCount;
+        private int mushroomsCount;
+
+        public static class Builder {
+            private String pizzaSize; // mandatory
+            private String crust; // mandatory
+            private int cheeseCount = 0; // optional
+            private int pepperoniCount = 0; // optional
+            private int hamCount = 0; // optional
+            private int mushroomsCount = 0; // optional
+
+            public Builder(String pizzaSize, String crust) {
+                this.pizzaSize = pizzaSize;
+                this.crust = crust;
+            }
+
+            public Builder cheeseCount(int cheeseCount) {
+                this.cheeseCount = cheeseCount;
+                return this;
+            }
+
+            public Builder pepperoniCount(int pepperoniCount) {
+                this.pepperoniCount = pepperoniCount;
+                return this;
+            }
+
+            public Builder hamCount(int hamCount) {
+                this.hamCount = hamCount;
+                return this;
+            }
+
+            public Builder mushroomsCount(int mushroomsCount) {
+                this.mushroomsCount = mushroomsCount;
+                return this;
+            }
+
+            public Pizza build() {
+                return new Pizza(this);
+            }
+        }
+
+        private Pizza(Builder builder) {
+            this.pizzaSize = builder.pizzaSize;
+            this.crust = builder.crust;
+            this.cheeseCount = builder.cheeseCount;
+            this.pepperoniCount = builder.pepperoniCount;
+            this.hamCount = builder.hamCount;
+            this.mushroomsCount = builder.mushroomsCount;
+        }
+
+        // getters
+    }
+
+
+
+Pizza pizza = new Pizza.Builder("large", "thin")
+    .cheeseCount(1)
+    .pepperoniCount(1)
+    .build();
+
+
+
+
