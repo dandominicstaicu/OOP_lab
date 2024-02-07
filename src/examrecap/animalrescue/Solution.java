@@ -81,19 +81,25 @@ class AnimalFactory {
     }
 
     public static AnimalType toType(String type) {
-        return switch (type) {
-            case "p" -> AnimalType.Pisica;
-            case "c" -> AnimalType.Caine;
-            default -> throw new IllegalArgumentException("The animal type " + type + " does not exist");
-        };
+        switch (type) {
+            case "p":
+                return AnimalType.Pisica;
+            case "c":
+                return AnimalType.Caine;
+            default:
+                throw new IllegalArgumentException("The animal type " + type + " does not exist");
+        }
     }
 
     public static Animal createAnimal(final AnimalType animalType, final String name) {
-        return switch (animalType) {
-            case Pisica -> new Pisica(name);
-            case Caine -> new Caine(name);
-            default -> throw new IllegalArgumentException("The animal type " + animalType + " does not exist");
-        };
+        switch (animalType) {
+            case Pisica:
+                return new Pisica(name);
+            case Caine:
+                return new Caine(name);
+            default:
+                throw new IllegalArgumentException("The animal type " + animalType + " does not exist");
+        }
     }
 }
 

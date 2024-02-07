@@ -1,4 +1,4 @@
-package examrecap.iohandling;
+package examuseful.iohandling;
 
 import java.io.File;
 import java.io.FileNotFoundException;

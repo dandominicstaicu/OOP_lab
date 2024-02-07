@@ -1,4 +1,4 @@
-package examrecap.iohandling;
+package examuseful.iohandling;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
