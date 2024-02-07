@@ -1,0 +1,80 @@
+Source:
+https://ocw.cs.pub.ro/courses/poo-ca-cd/laboratoare/exceptii
+
+Aruncarea excepţiilor
+
+Exemplu de aruncare a unei excepţii:
+
+List<String> l = getArrayListObject();
+if (null == l)
+    throw new Exception("The list is empty");
+
+
+Prinderea excepţiilor
+
+Când o excepţie a fost aruncată, runtime system încearcă să o trateze (prindă). Tratarea unei excepţii este făcută de o porţiune de cod specială.
+
+    Cum definim o astfel de porţiune de cod specială?
+    Cum specificăm faptul că o porţiune de cod specială tratează o anumită excepţie?
+
+Să observăm următorul exemplu:
+
+public void f() throws Exception {
+    List<String> l = null;
+
+    if (null == l)
+        throw new Exception();
+}
+
+public void catchFunction() {
+    try {
+        f();
+    } catch (Exception e) {
+        System.out.println("Exception found!");
+    }
+}
+
+Se observă că dacă o funcţie aruncă o excepţie şi nu o prinde trebuie, în general, să adauge clauza throws în antet.
+
+Funcţia f va arunca întotdeauna o excepţie (din cauza că l este mereu null). Observaţi cu atenţie funcţia catchFunction:
+
+    în interiorul său a fost definit un bloc try, în interiorul căruia se apelează f. De obicei, pentru a prinde o excepţie, trebuie să specificăm o zonă în care aşteptăm ca excepţia să se producă (guarded region). Această zonă este introdusă prin try.
+    în continuare, avem blocul catch (Exception e). La producerea excepţiei, blocul catch corespunzător va fi executat. În cazul nostru se va afişa mesajul “Exception found!”. După aceea, programul va continua să ruleze normal în continuare.
+
+Observaţi un alt exemplu:
+
+public void f() throws NullPointerException, EmptyListException {
+    List<String> l = generateList();
+
+    if (l == null)
+        throw new NullPointerException();
+
+    if (l.isEmpty())
+        throw new EmptyListException();
+}
+
+public void catchFunction() {
+    try {
+        f();
+    } catch (NullPointerException e) {
+        System.out.println("Null Pointer Exception found!");
+    } catch (EmptyListException e) {
+        System.out.println("Empty List Exception found!");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

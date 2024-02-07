@@ -1,3 +1,17 @@
+SOLID PRINCIPLES
+
+    Single Responsibility Principle
+    Open Closed Principle
+    Liskov Substitution Principle
+    Interface Segregation
+    Dependency Inversion
+
+
+
+
+
+source: https://ocw.cs.pub.ro/courses/poo-ca-cd/laboratoare/design-patterns
+
 Factory pattern
 
 
